@@ -1,0 +1,42 @@
+<?php
+
+include_once __DIR__ . '/app.php';
+
+/**
+ * Configuración general del backend (Plantilla de ejemplo).
+ * Copia este archivo como 'config.php' e ingresa tus credenciales locales.
+ */
+
+// --- Base de datos ---
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'revista_digital');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_CHARSET', 'utf8mb4');
+
+// --- CORS ---
+define('CORS_ORIGEN_PERMITIDO', 'http://localhost:5173');
+
+// --- Archivos ---
+define('RUTA_BASE_ARCHIVOS', RUTA_BASE . 'uploads');
+define('URL_BASE_ARCHIVOS', URL_BASE . 'uploads');
+
+// --- Frontend ---
+define('URL_BASE_FRONTEND', 'http://localhost:5173');
+
+// --- Contraseñas ---
+define('CONTRASENA_USAR_HASH', true);
+
+// --- Correo (SMTP) ---
+define('MAIL_HOST', 'smtp.gmail.com');
+define('MAIL_PUERTO', 587);
+define('MAIL_USUARIO', 'tu_correo@gmail.com');
+define('MAIL_CONTRASENA', 'tu_contrasena_de_aplicacion');
+define('MAIL_CIFRADO', 'tls');
+define('MAIL_REMITENTE', 'tu_correo@gmail.com');
+define('MAIL_REMITENTE_NOMBRE', 'NEGOTECK');
+
+define('CORREO_EMPRESA', 'tu_correo@gmail.com');
+
+// Cambia a false para enviar correos SMTP reales en local
+define('MAIL_MODO_DESARROLLO', true);

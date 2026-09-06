@@ -1,0 +1,13 @@
+Coloca o renombra aquí las imágenes con estos nombres exactos:
+
+administracion.jpg
+economia.jpg
+contabilidad-finanzas.jpg
+mercadotecnia-logistica.jpg
+comercio-internacional.jpg
+tecnologias-informacion.jpg
+gestion-conocimiento-innovacion.jpg
+ingenieria.jpg
+
+En React se usan como /imagenes/nombre.jpg.
+No se escribe public en la ruta.
