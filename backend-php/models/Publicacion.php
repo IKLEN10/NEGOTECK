@@ -111,8 +111,11 @@ class Publicacion
                 a.slug   AS area_slug,
                 a.nombre AS area_nombre,
                 a.color  AS area_color,
+                u.id_usuario,
                 u.nombre     AS usuario_nombre,
                 u.apellidos  AS usuario_apellidos,
+                u.biografia AS usuario_biografia,
+                u.foto_perfil AS avatar,
                 pa.nombre_autor AS autor_principal_nombre
             FROM publicaciones p
             INNER JOIN areas a
@@ -150,7 +153,11 @@ class Publicacion
                 'color'  => $fila['area_color'],
             ],
             'autor'         => [
-                'nombre' => $nombreAutor !== '' ? $nombreAutor : 'Autor invitado',
+                'id'        => isset($fila['id_usuario']) ? (int) $fila['id_usuario'] : null,
+                'nombre'    => $nombreAutor !== '' ? $nombreAutor : 'Autor invitado',
+                'biografia' => $fila['usuario_biografia'] ?? null,
+                'avatar'    => $fila['avatar'] ? $this->resolverUrlArchivo($fila['avatar'], 'perfiles/') : null,
+
             ],
         ];
     }
