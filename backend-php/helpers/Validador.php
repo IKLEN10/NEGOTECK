@@ -8,10 +8,10 @@
  */
 class Validador
 {
-    public const NOMBRE_MIN = 2;
-    public const NOMBRE_MAX = 80;
-    public const APELLIDOS_MAX = 120;
-    public const CORREO_MAX = 150;
+    public const NOMBRE_MIN     = 2;
+    public const NOMBRE_MAX     = 80;
+    public const APELLIDOS_MAX  = 120;
+    public const CORREO_MAX     = 150;
     public const CONTRASENA_MIN = 8;
     public const CONTRASENA_MAX = 72;
 
@@ -78,7 +78,7 @@ class Validador
 
     public static function validarNombre(string $valor, int $min, int $max): ?string
     {
-        $valor = trim($valor);
+        $valor    = trim($valor);
         $longitud = mb_strlen($valor);
 
         if ($valor === '') {
@@ -90,7 +90,7 @@ class Validador
         if ($longitud > $max) {
             return "No puede superar los {$max} caracteres.";
         }
-        if (!preg_match(self::PATRON_NOMBRE, $valor)) {
+        if (! preg_match(self::PATRON_NOMBRE, $valor)) {
             return 'Solo se permiten letras, espacios, guiones y apóstrofes (sin números ni símbolos).';
         }
 
@@ -107,7 +107,7 @@ class Validador
         if (mb_strlen($correo) > self::CORREO_MAX) {
             return 'El correo electrónico es demasiado largo.';
         }
-        if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+        if (! filter_var($correo, FILTER_VALIDATE_EMAIL)) {
             return 'El formato del correo electrónico no es válido.';
         }
 
@@ -131,16 +131,16 @@ class Validador
         if ($longitud > self::CONTRASENA_MAX) {
             return 'La contraseña no puede superar los ' . self::CONTRASENA_MAX . ' caracteres.';
         }
-        if (!preg_match('/[A-Z]/', $contrasena)) {
+        if (! preg_match('/[A-Z]/', $contrasena)) {
             return 'La contraseña debe incluir al menos una letra mayúscula.';
         }
-        if (!preg_match('/[a-z]/', $contrasena)) {
+        if (! preg_match('/[a-z]/', $contrasena)) {
             return 'La contraseña debe incluir al menos una letra minúscula.';
         }
-        if (!preg_match('/[0-9]/', $contrasena)) {
+        if (! preg_match('/[0-9]/', $contrasena)) {
             return 'La contraseña debe incluir al menos un número.';
         }
-        if (!preg_match('/[^A-Za-z0-9]/', $contrasena)) {
+        if (! preg_match('/[^A-Za-z0-9]/', $contrasena)) {
             return 'La contraseña debe incluir al menos un carácter especial.';
         }
 
@@ -156,7 +156,7 @@ class Validador
     public static function validarComentario(string $contenido): ?string
     {
         $contenido = trim($contenido);
-        $longitud = mb_strlen($contenido);
+        $longitud  = mb_strlen($contenido);
 
         if ($contenido === '') {
             return 'El comentario no puede estar vacío.';
@@ -167,7 +167,7 @@ class Validador
         if ($longitud > self::COMENTARIO_MAX) {
             return 'El comentario no puede superar los ' . self::COMENTARIO_MAX . ' caracteres.';
         }
-        if (!preg_match(self::PATRON_COMENTARIO_PERMITIDO, $contenido)) {
+        if (! preg_match(self::PATRON_COMENTARIO_PERMITIDO, $contenido)) {
             return 'El comentario contiene caracteres no permitidos.';
         }
         if (self::contieneLenguajeOfensivo($contenido)) {
@@ -177,6 +177,10 @@ class Validador
         return null;
     }
 
+    public static function tieneOfensas(string $texto): bool
+    {
+        return self::contieneLenguajeOfensivo($texto);
+    }
     /**
      * Detecta lenguaje ofensivo tolerando los intentos de evasión más
      * comunes: mayúsculas/minúsculas, acentos, letras repetidas
@@ -214,7 +218,7 @@ class Validador
     private static function construirPatronEvasion(string $palabra): string
     {
         $palabra = self::quitarAcentos(mb_strtolower($palabra));
-        $letras = preg_split('//u', $palabra, -1, PREG_SPLIT_NO_EMPTY);
+        $letras  = preg_split('//u', $palabra, -1, PREG_SPLIT_NO_EMPTY);
 
         $segmentos = array_map(function (string $letra): string {
             if ($letra === ' ') {
@@ -224,7 +228,7 @@ class Validador
             }
 
             $equivalencias = self::EQUIVALENCIAS_EVASION[$letra] ?? $letra;
-            $clase = preg_quote($equivalencias, '/');
+            $clase         = preg_quote($equivalencias, '/');
 
             // Clase de caracteres con la letra y sus posibles sustitutos,
             // permitiendo que se repita (p. ej. "puuuuuto").
