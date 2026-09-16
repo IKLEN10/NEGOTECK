@@ -29,7 +29,7 @@ export default function PublicacionesDestacadas() {
   }, [])
 
   return (
-    <section id="publicaciones" className="scroll-mt-20 bg-papel-suave py-16 sm:py-20">
+    <section id="publicaciones-destacadas" className="scroll-mt-20 bg-papel-suave py-16 sm:py-20">
       <div ref={referencia} className="revelar contenedor-pagina">
         <p className="antetitulo">Publicaciones destacadas</p>
         <h2 className="mt-3 max-w-lg font-display text-2xl font-medium text-tinta sm:text-3xl">

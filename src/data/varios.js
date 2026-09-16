@@ -1,10 +1,3 @@
-export const estadisticasRevista = [
-  { id: 's1', etiqueta: 'Publicaciones activas', valor: '312' },
-  { id: 's2', etiqueta: 'Autores registrados', valor: '148' },
-  { id: 's3', etiqueta: 'Áreas de investigación', valor: '8' },
-  { id: 's4', etiqueta: 'Lectores mensuales', valor: '46K' },
-]
-
 export const preguntasFrecuentes = [
   {
     id: 'f1',

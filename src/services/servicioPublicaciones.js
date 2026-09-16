@@ -8,13 +8,6 @@ export async function obtenerPublicacionesRecientes(limite = 5) {
   return datos;
 }
 
-export async function obtenerPublicacionesDestacadas(limite = 6) {
-  const { datos } = await solicitarApi(
-    `/publicaciones-destacadas.php?limite=${limite}`,
-  );
-  return datos;
-}
-
 // `registrarVista` en false evita que el backend incremente el contador de
 // vistas (se usa cuando esta publicación ya fue contabilizada antes en la
 // misma sesión del navegador, por ejemplo tras recargar la página).

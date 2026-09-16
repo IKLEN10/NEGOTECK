@@ -2,12 +2,14 @@ import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import EnrutadorApp from './router/EnrutadorApp'
 import { useNotificacion } from './hooks/useNotificacion'
+import { usePresencia } from './hooks/usePresencia'
 import { estaAutenticado, limpiarSesion } from './services/servicioAutenticacion'
 
 export default function App() {
   const navegar = useNavigate()
   const ubicacion = useLocation()
   const { mostrarNotificacion } = useNotificacion()
+  usePresencia()
   // Evita mostrar el aviso más de una vez si varias peticiones en curso
   // reciben 401 casi al mismo tiempo (p. ej. dos llamadas en paralelo al
   // cargar un panel justo cuando el token expiró).

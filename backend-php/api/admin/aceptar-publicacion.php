@@ -5,8 +5,8 @@ require_once __DIR__ . '/../../helpers/Autenticacion.php';
 
 /**
  * Aprueba una publicación PENDIENTE: pasa a estado APROBADO y a partir de
- * ese momento aparece en la página principal (publicaciones-recientes.php /
- * publicaciones-destacadas.php ya solo exponen estado = 'APROBADO').
+ * ese momento aparece en la página principal (publicaciones-recientes.php
+ * ya solo expone estado = 'APROBADO').
  *
  * POST /api/admin/aceptar-publicacion.php
  * Body (form-data): id_publicacion

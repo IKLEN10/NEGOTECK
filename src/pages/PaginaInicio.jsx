@@ -1,43 +1,24 @@
-import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
 import BannerSuperior from '../components/layout/BannerSuperior'
 import BarraNavegacion from '../components/layout/BarraNavegacion'
 import CarruselPublicaciones from '../components/home/CarruselPublicaciones'
 import CuadriculaAreas from '../components/home/CuadriculaAreas'
-import SeccionAcercaDe from '../components/home/SeccionAcercaDe'
-import ComoPublicar from '../components/home/ComoPublicar'
-import GuiaElaboracionArticulos from '../components/home/GuiaElaboracionArticulos'
-import BandaEstadisticas from '../components/home/BandaEstadisticas'
-import SeccionPreguntasFrecuentes from '../components/home/SeccionPreguntasFrecuentes'
-import SeccionContacto from '../components/home/SeccionContacto'
+import SeccionEnlacesRapidos from '../components/home/SeccionEnlacesRapidos'
 
+// El inicio se enfoca en las publicaciones: lo primero que se ve es el
+// banner de presentación con el menú justo debajo (que ya incluye, junto
+// al buscador, las cifras en vivo de vistas totales y usuarios activos —
+// ver BarraNavegacion → ContadoresEnVivo), y después lo más reciente,
+// seguido de las áreas. La información institucional completa (Quiénes
+// somos, Cómo publicar, Contacto) vive ahora en sus propias páginas —
+// aquí solo queda una franja breve de accesos rápidos hacia ellas.
 export default function PaginaInicio() {
-  const { hash } = useLocation()
-
-  useEffect(() => {
-    if (!hash) return
-    const idSeccion = hash.replace('#', '')
-    const elemento = document.getElementById(idSeccion)
-    if (elemento) {
-      setTimeout(() => elemento.scrollIntoView({ behavior: 'smooth' }), 80)
-    }
-  }, [hash])
-
   return (
     <>
-      {/* Jerarquía: banner de presentación, menú de navegación y, de
-          inmediato, las publicaciones recientes, sin secciones intermedias
-          (Portada y Publicaciones destacadas se retiraron del inicio). */}
       <BannerSuperior />
       <BarraNavegacion />
       <CarruselPublicaciones />
       <CuadriculaAreas />
-      <SeccionAcercaDe />
-      <ComoPublicar />
-      <GuiaElaboracionArticulos />
-      <BandaEstadisticas />
-      <SeccionPreguntasFrecuentes />
-      <SeccionContacto />
+      <SeccionEnlacesRapidos />
     </>
   )
 }

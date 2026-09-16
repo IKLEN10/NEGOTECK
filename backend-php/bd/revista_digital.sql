@@ -23,6 +23,24 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+
+-- Migración: usuarios activos en tiempo real (banda de estadísticas del inicio)
+-- Esta tabla guarda, por cada pestaña/navegador (id de sesión aleatorio
+-- generado en el frontend y persistido en sessionStorage), la última vez
+-- que se recibió una señal de actividad ("heartbeat"). El backend
+-- considera "activo ahora" a cualquier registro cuya `ultima_actividad`
+-- sea reciente (ver Estadistica::obtenerResumen), sin necesidad de una
+-- conexión persistente (WebSockets), y limpia filas viejas en cada
+-- escritura para que la tabla no crezca indefinidamente.
+CREATE TABLE IF NOT EXISTS `sesiones_activas` (
+  `id_sesion` varchar(64) NOT NULL,
+  `id_usuario` int(10) UNSIGNED DEFAULT NULL,
+  `ultima_actividad` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_sesion`),
+  KEY `idx_sesiones_activas_ultima_actividad` (`ultima_actividad`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 --
 -- Estructura de tabla para la tabla `areas`
 --
