@@ -1,14 +1,15 @@
 import { Link } from 'react-router-dom'
 
+// Mismas rutas internas que usa el menú principal (BarraNavegacion), sin
+// anclas de scroll: cada enlace navega a su propia página dentro de la
+// misma aplicación.
 const COLUMNAS = [
   {
     titulo: 'Explorar',
     enlaces: [
       { etiqueta: 'Inicio', to: '/' },
-      { etiqueta: 'Áreas', to: '/#areas' },
-      { etiqueta: 'Publicaciones', to: '/#publicaciones' },
-      { etiqueta: '¿Cómo publicar?', to: '/#como-publicar' },
-      { etiqueta: '¿Quieres publicar?', to: '/#quieres-publicar' },
+      { etiqueta: 'Áreas de conocimiento', to: '/areas' },
+      { etiqueta: '¿Cómo publicar?', to: '/como-publicar' },
     ],
   },
   {
@@ -22,9 +23,8 @@ const COLUMNAS = [
   {
     titulo: 'Revista',
     enlaces: [
-      { etiqueta: 'Quiénes somos', to: '/#quienes-somos' },
-      { etiqueta: 'Contacto', to: '/#contacto' },
-      { etiqueta: 'Preguntas frecuentes', to: '/#faq' },
+      { etiqueta: 'Quiénes somos', to: '/quienes-somos' },
+      { etiqueta: 'Contacto', to: '/contacto' },
     ],
   },
 ]
@@ -48,15 +48,9 @@ export default function PiePagina() {
             <ul className="mt-4 flex flex-col gap-2.5">
               {columna.enlaces.map((enlace) => (
                 <li key={enlace.etiqueta}>
-                  {enlace.to.startsWith('/#') ? (
-                    <a href={enlace.to} className="text-sm text-papel-suave/75 hover:text-papel-suave">
-                      {enlace.etiqueta}
-                    </a>
-                  ) : (
-                    <Link to={enlace.to} className="text-sm text-papel-suave/75 hover:text-papel-suave">
-                      {enlace.etiqueta}
-                    </Link>
-                  )}
+                  <Link to={enlace.to} className="text-sm text-papel-suave/75 hover:text-papel-suave">
+                    {enlace.etiqueta}
+                  </Link>
                 </li>
               ))}
             </ul>

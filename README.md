@@ -21,38 +21,10 @@ en inglés únicamente los identificadores propios de React/JavaScript (`useStat
 - Node.js 18 o superior
 - npm 9 o superior
 
-## Guía de Instalación Local
-
-### Clonar el repositorio
-
-```bash
-git clone <URL_DE_TU_REPOSITORIO>
-cd NEGOTECK
-```
-
-### Instalación
+## Instalación
 
 ```bash
 npm install
-# Crear archivo de variables de entorno
-cp .env.example .env
-```
-
-Nota: Revisa el archivo .env recién creado y ajusta la variable VITE_API_URL según la ruta local de tu servidor PHP.
-
-### Configurar la Base de Datos y el Backend
-
-Abre tu gestor de base de datos local (phpMyAdmin, MySQL Workbench, DBeaver, etc.).
-
-Crea una base de datos vacía (por ejemplo: revista_digital).
-
-Importa el archivo SQL ubicado en la raíz del proyecto: base_datos_revista_digital.sql.
-
-Asegúrate de que la carpeta backend-php/ sea accesible a través de tu servidor web local (XAMPP, WAMP, Laragon o Apache).
-
-### Iniciar el entorno de desarrollo
-
-```bash
 npm run dev
 ```
 
@@ -86,18 +58,18 @@ src/
 
 ## Rutas principales
 
-| Ruta                   | Descripción                                                        |
-| ---------------------- | ------------------------------------------------------------------ |
-| `/`                    | Página de inicio (todas las secciones)                             |
-| `/areas/:idArea`       | Publicaciones filtradas por área                                   |
-| `/publicacion/:id`     | Detalle visual de una publicación (incluye sección de comentarios) |
-| `/login`               | Inicio de sesión (simulado)                                        |
-| `/registro`            | Registro de autor (simulado)                                       |
-| `/recuperar`           | Recuperar contraseña (simulado)                                    |
-| `/panel`               | Dashboard del autor                                                |
-| `/panel/publicaciones` | Tabla de publicaciones del autor                                   |
-| `/panel/subir`         | Formulario de nueva publicación                                    |
-| `/panel/perfil`        | Perfil del autor                                                   |
+| Ruta                     | Descripción                             |
+| ------------------------ | ---------------------------------------- |
+| `/`                      | Página de inicio (todas las secciones)   |
+| `/areas/:idArea`         | Publicaciones filtradas por área         |
+| `/publicacion/:id`       | Detalle visual de una publicación (incluye sección de comentarios) |
+| `/login`                 | Inicio de sesión (simulado)              |
+| `/registro`              | Registro de autor (simulado)             |
+| `/recuperar`             | Recuperar contraseña (simulado)          |
+| `/panel`                 | Dashboard del autor                      |
+| `/panel/publicaciones`   | Tabla de publicaciones del autor         |
+| `/panel/subir`           | Formulario de nueva publicación          |
+| `/panel/perfil`          | Perfil del autor                         |
 
 ## Sección de comentarios
 

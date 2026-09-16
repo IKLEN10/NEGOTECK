@@ -41,23 +41,6 @@ class Publicacion
         return array_map([$this, 'mapearFila'], $consulta->fetchAll());
     }
 
-    public function obtenerDestacadas(int $limite = 6): array
-    {
-        $limite = $this->normalizarLimite($limite, 6, 24);
-
-        $sql = $this->consultaBase() . '
-            AND p.destacado = 1
-            ORDER BY COALESCE(p.fecha_publicacion, p.fecha_registro) DESC
-            LIMIT :limite
-        ';
-
-        $consulta = $this->conexion->prepare($sql);
-        $consulta->bindValue(':limite', $limite, PDO::PARAM_INT);
-        $consulta->execute();
-
-        return array_map([$this, 'mapearFila'], $consulta->fetchAll());
-    }
-
     /**
      * Trae una publicación aprobada por su id.
      * Usada por la página de detalle ("Ver más") del frontend.
@@ -108,11 +91,8 @@ class Publicacion
                 a.slug   AS area_slug,
                 a.nombre AS area_nombre,
                 a.color  AS area_color,
-                u.id_usuario,
                 u.nombre     AS usuario_nombre,
                 u.apellidos  AS usuario_apellidos,
-                u.biografia AS usuario_biografia,
-                u.foto_perfil AS avatar,
                 pa.nombre_autor AS autor_principal_nombre
             FROM publicaciones p
             INNER JOIN areas a
@@ -134,26 +114,23 @@ class Publicacion
             ?: trim($fila['usuario_nombre'] . ' ' . $fila['usuario_apellidos']);
 
         return [
-            'id'            => (int) $fila['id_publicacion'],
-            'titulo'        => $fila['titulo'],
-            'resumen'       => $fila['resumen'],
-            'imagen'        => $this->resolverUrlArchivo($fila['imagen_portada'], 'publicaciones/img'),
-            'pdf'           => $fila['archivo_pdf'] ? $this->resolverUrlArchivo($fila['archivo_pdf'], 'publicaciones/docs') : null,
-            'fecha'         => $fila['fecha_publicacion'] ?? $fila['fecha_registro'],
-            'destacado'     => (bool) $fila['destacado'],
-            'visitas'       => (int) $fila['visitas'],
+            'id'        => (int) $fila['id_publicacion'],
+            'titulo'    => $fila['titulo'],
+            'resumen'   => $fila['resumen'],
+            'imagen'    => $this->resolverUrlArchivo($fila['imagen_portada'], 'publicaciones/img'),
+            'pdf'       => $fila['archivo_pdf'] ? $this->resolverUrlArchivo($fila['archivo_pdf'], 'publicaciones/docs') : null,
+            'fecha'     => $fila['fecha_publicacion'] ?? $fila['fecha_registro'],
+            'destacado' => (bool) $fila['destacado'],
+            'visitas'   => (int) $fila['visitas'],
             'tipoContenido' => $fila['tipo_contenido'] ?? 'archivo',
             'urlVideo'      => $fila['url_video'] ?? null,
-            'area'          => [
+            'area'      => [
                 'id'     => $fila['area_slug'],
                 'nombre' => $fila['area_nombre'],
                 'color'  => $fila['area_color'],
             ],
-            'autor'         => [
-                'id'        => isset($fila['id_usuario']) ? (int) $fila['id_usuario'] : null,
-                'nombre'    => $nombreAutor !== '' ? $nombreAutor : 'Autor invitado',
-                'biografia' => $fila['usuario_biografia'] ?? null,
-                'avatar'    => $fila['avatar'] ? $this->resolverUrlArchivo($fila['avatar'], 'perfiles/') : null,
+            'autor'     => [
+                'nombre' => $nombreAutor !== '' ? $nombreAutor : 'Autor invitado',
             ],
         ];
     }
@@ -196,8 +173,8 @@ class Publicacion
 
         // Caso normal: la BD contiene solamente el nombre generado al subirlo.
         return rtrim(URL_BASE_ARCHIVOS, '/')
-        . '/' . trim($subdirectorio, '/')
-        . '/' . basename($rutaNormalizada);
+            . '/' . trim($subdirectorio, '/')
+            . '/' . basename($rutaNormalizada);
     }
 
     private function normalizarLimite(int $limite, int $porDefecto, int $maximo): int
@@ -529,14 +506,14 @@ class Publicacion
         if (! $fila) {
             return null;
         }
-        $publicacion                 = $this->mapearFila($fila);
-        $publicacion['razonRechazo'] = $fila['observaciones_editor'] ?? null;
-        $publicacion['imagen']       = $fila['imagen_portada'] ?? null;
-        $publicacion['pdf']          = $fila['archivo_pdf'] ?? null;
+        $publicacion                   = $this->mapearFila($fila);
+        $publicacion['razonRechazo']   = $fila['observaciones_editor'] ?? null;
+        $publicacion['imagen']         = $fila['imagen_portada'] ?? null;
+        $publicacion['pdf']            = $fila['archivo_pdf'] ?? null;
         // Expuesto solo para que el endpoint pueda verificar que quien pide
         // el detalle es el dueño de la publicación (o un administrador)
         // antes de responder; no forma parte del contrato público normal.
-        $publicacion['idUsuario'] = (int) $fila['id_usuario'];
+        $publicacion['idUsuario']      = (int) $fila['id_usuario'];
 
         return $publicacion;
     }
