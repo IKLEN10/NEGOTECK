@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 13-08-2026 a las 20:22:19
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Servidor: 127.0.0.1:3306
+-- Tiempo de generación: 16-09-2026 a las 19:03:44
+-- Versión del servidor: 11.8.9-MariaDB-log
+-- Versión de PHP: 7.2.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `revista_digital`
+-- Base de datos: `revista_digital_fusionada_LIMPIA`
 --
 
 -- --------------------------------------------------------
@@ -68,14 +68,6 @@ CREATE TABLE `comentarios` (
   `fecha_registro` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_actualizacion` datetime DEFAULT NULL ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `comentarios`
---
-
-INSERT INTO `comentarios` (`id_comentario`, `id_publicacion`, `id_usuario`, `contenido`, `activo`, `fecha_registro`, `fecha_actualizacion`) VALUES
-(10, 6, 3, 'putos', 1, '2026-08-06 20:01:26', NULL),
-(11, 6, 3, 'putos', 1, '2026-08-06 20:02:08', NULL);
 
 -- --------------------------------------------------------
 
@@ -147,8 +139,8 @@ CREATE TABLE `publicaciones` (
   `id_publicacion` bigint(20) UNSIGNED NOT NULL,
   `id_area` int(10) UNSIGNED NOT NULL,
   `id_usuario` int(10) UNSIGNED NOT NULL,
-  `titulo` varchar(250) NOT NULL,
-  `resumen` varchar(300) NOT NULL,
+  `titulo` text NOT NULL,
+  `resumen` text NOT NULL,
   `archivo_pdf` varchar(500) DEFAULT NULL,
   `imagen_portada` varchar(500) DEFAULT NULL,
   `estado` enum('BORRADOR','PENDIENTE','APROBADO','RECHAZADO') NOT NULL DEFAULT 'PENDIENTE',
@@ -159,8 +151,8 @@ CREATE TABLE `publicaciones` (
   `fecha_envio` datetime DEFAULT NULL,
   `fecha_publicacion` datetime DEFAULT NULL,
   `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `tipo_contenido` enum('archivo','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'archivo',
-  `url_video` varchar(500) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
+  `tipo_contenido` enum('archivo','video') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'archivo',
+  `url_video` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -168,9 +160,22 @@ CREATE TABLE `publicaciones` (
 --
 
 INSERT INTO `publicaciones` (`id_publicacion`, `id_area`, `id_usuario`, `titulo`, `resumen`, `archivo_pdf`, `imagen_portada`, `estado`, `destacado`, `visitas`, `observaciones_editor`, `fecha_registro`, `fecha_envio`, `fecha_publicacion`, `fecha_actualizacion`, `tipo_contenido`, `url_video`) VALUES
-(6, 8, 3, 'Aprendiendo Phayton', 'Aprendisague sobre los primeros pasos para aprender phyton con un metodo dibertido y agradable para alumnos', '0209e07524.pdf', '3ccc9628e7.png', 'APROBADO', 0, 4, NULL, '2026-08-06 19:58:27', NULL, NULL, '2026-08-06 20:11:25', 'archivo', NULL),
-(7, 1, 4, 'Como publicar cosas en insta correctamente', 'no puede ser ahora no funciona y no se como corregirlo ayudada jajaj y luego ahorita me van a cagar en la uni todo porque el director de carrera me odia', '72b9f7bb1f.pdf', 'ea170a9378.png', 'PENDIENTE', 0, 0, NULL, '2026-08-07 07:09:25', NULL, NULL, '2026-08-07 07:09:45', 'archivo', NULL),
-(8, 1, 4, 'Importancia de la Gestión de Conocimiento en las Empresas Contemporáneas', 'Importancia de la Gestión de Conocimiento en las Empresas ContemporáneasImportancia de la Gestión de Conocimiento en las Empresas ContemporáneasImportancia de la Gestión de Conocimiento en las Empresas ContemporáneasImportancia de la Gestión de Conocimiento en las Empresas ContemporáneasImportancia ', 'fb167438b0.pdf', '05efe17f45.png', 'PENDIENTE', 0, 0, NULL, '2026-08-07 14:18:37', NULL, NULL, '2026-08-07 14:18:37', 'archivo', NULL);
+(11, 1, 8, 'Importancia de la Gestión de Conocimiento en las Empresas Contemporáneas', 'Uno de los activos más valiosos, pero a menudo subestimado, es el conocimiento. La Gestión de Conocimiento (GC) se ha convertido en una herramienta esencial para las organizaciones que buscan mejorar su eficiencia, innovar y ser competitiva. Este artículo explora qué es la Gestión de Conocimiento, su importancia en el contexto empresarial moderno y cómo puede transformar la manera en que las empresas operan.', '1c1fdef23f.pdf', '4ea5e41db4.png', 'APROBADO', 0, 1, NULL, '2026-08-07 07:08:53', NULL, '2026-09-07 21:58:15', '2026-09-07 22:05:08', 'archivo', NULL),
+(12, 2, 8, 'Las 10 principales necesidades y problemáticas de las PyMES Mexicanas', 'Las pequeñas y medianas empresas (PyMEs) son el corazón de la economía mexicana. En este artículo, exploramos las 10 principales necesidades y problemáticas de las PyMEs en México, con un enfoque sencillo para comprenderlas y plantear soluciones prácticas.', '5f0a7dea15.pdf', '45b37f2585.png', 'APROBADO', 0, 0, NULL, '2026-08-07 13:26:49', NULL, '2026-08-07 19:53:28', '2026-08-07 19:53:28', 'archivo', NULL),
+(13, 2, 8, 'Avances tecnológicos en los core bancarios a nivel internacional', 'En 2024 los sistemas de core bancario han evolucionado de estructuras monolíticas a arquitecturas flexibles y orientadas a microservicios, mejorando así la escalabilidad y capacidad de integración. La inteligencia artificial y el aprendizaje automático optimizan la detección de fraudes y la personalización de servicios, mientras que la blockchain y la tecnología de registro distribuido mejoran la transparencia y eficiencia en las transacciones.', '77af2943e7.pdf', 'cb15f52440.png', 'APROBADO', 0, 0, NULL, '2026-08-07 13:30:49', NULL, '2026-08-07 19:53:29', '2026-08-07 19:53:29', 'archivo', NULL),
+(14, 1, 8, 'Optimizando proyectos con herramientas Project Portfolio Management  (PPM)', 'En el entorno empresarial actual, las organizaciones se enfrentan a una creciente complejidad en la gestión de proyectos. Para abordar este desafío, muchas empresas recurren a la Gestión de Portafolio de Proyectos (PPM), una disciplina que permite coordinar y priorizar proyectos para alcanzar los objetivos estratégicos de la organización, así como gestionar recursos, elaborar presupuestos, gestionar finanzas y riesgos, dirigir e informar sobre proyectos, etc.', 'e0b20e1e25.pdf', '10a41e3885.png', 'APROBADO', 0, 1, NULL, '2026-08-07 13:34:35', NULL, '2026-08-07 19:53:36', '2026-08-07 19:54:07', 'archivo', NULL),
+(15, 7, 8, 'Revolución digital y la importancia de la Universidad Corporativa', 'La capacitación empresarial ha experimentado una transformación significativa en la era digital. La adopción de tecnologías innovadoras ha permitido a las empresas ofrecer experiencias de aprendizaje más accesibles, personalizadas y efectivas. En este documento explicaremos la evolución de la capacitación empresarial a través de plataformas digitales y la importancia de contar con una universidad corporativa.', 'c94183c1ac.pdf', '3d1f363720.png', 'APROBADO', 0, 0, NULL, '2026-08-07 13:37:30', NULL, '2026-08-07 19:53:31', '2026-08-07 19:53:31', 'archivo', NULL),
+(16, 1, 8, 'Kanban como método de Gestión de Proyectos', 'Dentro de la industria de tecnologías de la Información Kanban ha funcionado perfectamente gracias a que se listan de manera gráfica actividades específicas de los proyectos en curso, esto permite un alto nivel de seguimiento y cumplimiento de estas. Kanban es un método de gestión de proyectos en el que de manera gráfica se listan las actividades por hacer, las actividades en progreso y las tareas terminadas de múltiples equipos.', '77eb5a2ca3.pdf', 'ba6cb8d84f.png', 'APROBADO', 0, 0, NULL, '2026-08-07 13:40:27', NULL, '2026-08-07 19:53:35', '2026-08-07 19:53:35', 'archivo', NULL),
+(17, 6, 8, 'Las alternativas tecnológicas en la Nube', 'Los servicios en la nube son los encargados de almacenar y procesar datos. Este tipo de servicios permiten la gestión de información y se ejecutan desde un servidor. Las nubes pueden ser híbridas, privadas o públicas. Entre las categorías de servicio en la nube más populares se encuentran las siguientes: Infraestructura (Iaas), Plataforma (PasS) y Software (SaaS). Sin embargo existen otros servicios que van surgiendo y que están generando valor a los usuarios, tales como Terminal as a Service (TaaS) y Payment Platform as a Service (PPaaS) propuestos por la empresa Ingenico.', 'ea4eea2cc3.pdf', '91ba896313.png', 'APROBADO', 0, 0, NULL, '2026-08-07 13:45:41', NULL, '2026-08-07 19:53:38', '2026-08-07 19:53:38', 'archivo', NULL),
+(18, 6, 8, 'Transformación digital a través de la hiperautomatización', 'La hiperautomatización beneficia los procesos empresariales y forma parte del crecimiento digital. Conforme avanza la tecnología nos vemos en la necesidad de implementar nuevas herramientas que permitan facilitarnos las tareas diarias de cualquier entorno en el que nos encontremos.', '89e4e7a98c.pdf', '695d703f2e.png', 'APROBADO', 0, 0, NULL, '2026-08-07 13:52:55', NULL, '2026-08-07 19:53:39', '2026-08-07 19:53:39', 'archivo', NULL),
+(19, 6, 8, 'Las posibilidades en el Metaverso', 'Dentro de las innovaciones de los últimos meses que se encuentran en desarrollo y crecimiento, está la próxima evolución de internet con la Web 3.0, se espera que para el año 2025 se produzcan más de 400,000 millones de dólares de ingresos a través del Metaverso. El Metaverso es un espacio digital de gran potencial que ofrece un sinfín de oportunidades en diferentes ámbitos: económico, social, tecnológico entre otros.', '5773ea38cc.pdf', '8462158921.png', 'APROBADO', 0, 1, NULL, '2026-08-07 13:56:22', NULL, '2026-08-07 19:53:41', '2026-08-07 19:55:48', 'archivo', NULL),
+(20, 6, 8, 'AWS ¿Qué es y para qué sirve?', 'Amazon Web Services brinda una serie de servicios en la nube a través de internet, permite disponer de almacenamiento, bases de datos, aplicaciones móviles, redes, seguridad, identidad, facilidad de infraestructura, adaptabilidad, bajo costo y toda una colección de servicios a través de la plataforma de amazon.com. Es un tema relevante que atiende necesidades de capacidad e inversión accesibles en el desarrollo de aplicaciones que ayudan a transformar negocios.', 'f495e5cf2c.pdf', '8bf4a2662e.png', 'APROBADO', 0, 0, NULL, '2026-08-07 14:01:01', NULL, '2026-08-07 19:54:33', '2026-08-07 19:54:33', 'archivo', NULL),
+(21, 7, 8, 'Conceptos generales sobre Gestión de Conocimiento, Tecnología e Innovación', 'Cuando se habla sobre Gestión de Conocimiento e Innovación es muy importante conocer algunos conceptos básicos generales que están relacionados con estas actividades y que determinan en gran medida la competitividad de una empresa u organización. Este artículo tiene como objetivo revisar algunos de estos conceptos tan importantes.', '63e1e416e7.pdf', '661fa4b488.png', 'APROBADO', 0, 2, NULL, '2026-08-07 14:04:15', NULL, '2026-08-07 19:54:35', '2026-08-07 19:57:44', 'archivo', NULL),
+(22, 1, 8, 'The magic of teamwork', 'Since the dawn of humanity, people have gathered into groups to improve their chances of survival. It could be stated that humans work better as a herd. In companies, it is no different: when efficient work teams are formed, the best results are achieved. This article describes the characteristics, importance and benefits of Teamwork.', '5351ee7853.pdf', 'efa6244449.png', 'APROBADO', 0, 2, NULL, '2026-08-07 14:20:22', NULL, '2026-08-07 20:02:33', '2026-09-07 21:49:38', 'archivo', NULL),
+(23, 7, 8, 'Las plataformas e-learning como opción para aumentar la capacidad y gestionar el conocimiento de las empresas.', 'Las plataformas e-learning o LMS (Learning Management System) son programas instalados en un servidor Web ofreciendo la posibilidad de conexión en línea desde cualquier lugar y a cualquier hora, facilitan materiales en diversos formatos y propósitos, como por ejemplo las herramientas colaborativas como Wikis, foros y chats que contribuyen a la captura y transformación de conocimiento tácito (experiencia) a conocimiento explícito (formal), logrando con ello parte de la gestión del conocimiento tanto en el ámbito académico como empresarial.', 'e727567989.pdf', '8c2c6b58f6.png', 'APROBADO', 0, 2, NULL, '2026-08-07 14:23:15', NULL, '2026-08-07 20:02:35', '2026-09-07 21:34:22', 'archivo', NULL),
+(24, 6, 8, 'Tecnología en tiempos de pandemia', 'La tecnología se ha convertido en parte fundamental de nuestro día a día y se intensificó a partir de los primeros meses del año 2020 tras la aparición de la enfermedad por Coronavirus en 2019 (COVID-19) y posteriormente declarada como pandemia por su rápida propagación. Las necesidades han incrementado con el impacto de dicha pandemia, se tuvo que ampliar el uso de la tecnología, y con ello adaptarnos a los cambios necesarios para continuar con las actividades que hemos venido realizando antes de la llegada de la pandemia.', '2a68732809.pdf', 'ece253d35e.png', 'APROBADO', 0, 0, NULL, '2026-08-07 14:30:39', NULL, '2026-08-07 20:02:37', '2026-08-07 20:02:37', 'archivo', NULL),
+(25, 7, 8, 'Importancia de los proyectos de innovación tecnológica', 'En la actualidad el término innovación es sinónimo de crecimiento y desarrollo, sin embargo, poco se habla del camino a seguir para lograr una innovación o un desarrollo tecnológico. En este video se explica la importancia de los proyectos de innovación tecnológica para ir de una idea creativa a la ', NULL, NULL, 'APROBADO', 0, 2, NULL, '2026-08-07 14:45:09', NULL, '2026-08-07 20:02:38', '2026-08-12 16:58:57', 'video', 'https://www.youtube.com/watch?v=aG0XMEt1EC8&t=4s'),
+(26, 7, 8, 'Proceso de Gestión de Proyectos Tecnológicos y de Innovación', 'En la actualidad empresas como Apple, Tesla o Amazon, son sinónimos de Innovación por las mejoras que presentan a sus productos y servicios continuamente, sin embargo, poco se habla sobre los procesos necesarios para llegar a las innovaciones que son tan bien recibidas por el público. Es por ello, que en el presente artículo se analiza el proceso de gestión de proyectos tecnológicos y de innovación.', NULL, NULL, 'PENDIENTE', 0, 2, NULL, '2026-08-07 14:46:00', NULL, '2026-08-07 20:02:40', '2026-09-07 22:02:01', 'video', 'https://www.youtube.com/watch?v=y58_WSBQhdo');
 
 -- --------------------------------------------------------
 
@@ -242,13 +247,6 @@ CREATE TABLE `tokens_login` (
 -- Volcado de datos para la tabla `tokens_login`
 --
 
-INSERT INTO `tokens_login` (`id_token_login`, `id_usuario`, `token_hash`, `token_expira`, `token_creado`, `token_revocado`, `fecha_uso`, `ip_cliente`, `user_agent`) VALUES
-(8, 3, '2220cd4f913cb9839c526a3ee1a048de06994f13b61dd6fbce73536cdb06f4d8', '2026-08-07 15:51:36', '2026-08-06 19:51:36', 0, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36'),
-(9, 3, '9f8a6bbbc396b9ab1f43548067303db95db5d635bc9fb58fb97200231aa6abdb', '2026-08-07 16:12:00', '2026-08-06 20:12:00', 0, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0'),
-(10, 4, '479599f7dbd685197c49691df077ac43d7ed7af7e4c4dbb4bb6a20477fd4c2ab', '2026-08-08 03:07:31', '2026-08-07 07:07:31', 0, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36'),
-(11, 4, '567bcccb6aab83d44ec82eda1e9a47caa5e1eb63c06c5efe781a4cca7d12998f', '2026-08-08 07:42:42', '2026-08-07 11:42:42', 0, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0'),
-(12, 4, '069cbbcf4c296bf8a5a2438887eda5889a2186cd390179dc01b0442731f6ee56', '2026-08-08 09:32:22', '2026-08-07 13:32:22', 1, '2026-08-07 14:17:02', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0'),
-(13, 4, '799d421332d089e6c57307d05ab4c6ffec3ed5e3057c654ffa2b07ab045fd54a', '2026-08-08 10:17:16', '2026-08-07 14:17:16', 0, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0');
 
 -- --------------------------------------------------------
 
@@ -265,6 +263,11 @@ CREATE TABLE `tokens_recuperacion` (
   `token_usado` tinyint(1) NOT NULL DEFAULT 0,
   `fecha_uso` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tokens_recuperacion`
+--
+
 
 -- --------------------------------------------------------
 
@@ -286,9 +289,6 @@ CREATE TABLE `tokens_registro` (
 -- Volcado de datos para la tabla `tokens_registro`
 --
 
-INSERT INTO `tokens_registro` (`id_token_registro`, `id_usuario`, `token_hash`, `token_expira`, `token_creado`, `token_usado`, `fecha_uso`) VALUES
-(2, 3, '3d7bb7fd736d23410c19bb5e7e8037d90f28884bfdec2d747c1d39cd22de4845', '2026-08-08 03:48:27', '2026-08-06 19:48:27', 1, '2026-08-06 19:51:22'),
-(3, 4, '8fc2cc601ed0f5760f15c54b24305a93d7100371a90f5bfcc2a73f3b12da151e', '2026-08-08 15:06:31', '2026-08-07 07:06:31', 1, '2026-08-07 07:07:19');
 
 -- --------------------------------------------------------
 
@@ -317,10 +317,36 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id_usuario`, `id_rol`, `nombre`, `apellidos`, `correo`, `contrasena_hash`, `foto_perfil`, `institucion`, `biografia`, `correo_verificado`, `activo`, `fecha_registro`, `fecha_actualizacion`) VALUES
-(3, 2, 'samuel', 'quezada', 'qs5805165@gmail.com', '$2y$10$zhMIqOIZsHPtg5w/LPSxcOJRzfxPqlpjbjso/Hj01CXv2HbOIQmf2', NULL, NULL, NULL, 1, 1, '2026-08-06 19:48:27', '2026-08-06 19:51:22'),
-(4, 2, 'Adriana', 'Trejo', 'adrianatrejopalma94@gmail.com', '$2y$10$Kt.sQuUB7Y3U2YYJKg/h3OEenxmkxPCf2HU0CSawK1y3ZUkjXCPHu', NULL, NULL, NULL, 1, 1, '2026-08-07 07:06:31', '2026-08-07 07:07:19');
+(4, 2, 'Jose Gadiel', 'Fuentes Trejo', 'josegadielft@gmail.com', '$2y$10$tpVITTziZZDGTp/ZuOw4iewxfE/tVWrZgh6gW28i2LbuSwphISebu', NULL, NULL, NULL, 1, 1, '2026-07-21 21:51:14', '2026-07-21 21:54:55'),
+(5, 2, 'Edwin', 'Torres', 'edwintorres044@gmail.com', '$2y$10$CkqCRT7tN/dT3/gta5m.1OLNmiKKhGZBFUWlepqISJa25iF5ejfwG', NULL, 'UTVM', 'E', 1, 1, '2026-07-21 21:58:24', '2026-08-04 20:06:54'),
+(6, 1, 'Admin', 'TI', 'Admin@gmail.com', '123456789', NULL, NULL, NULL, 1, 1, '2026-07-21 22:07:52', '2026-07-21 22:07:52'),
+(7, 2, 'Yosellin', 'Martínez Flores', 'yosellinm345@gmail.com', '$2y$10$I.0wYKwZU1sUYjHILPGQ4uYXQgTZ8VE1mciuqA6sLiVeAcNIbcriy', NULL, NULL, NULL, 1, 1, '2026-07-21 22:14:48', '2026-07-21 22:15:24'),
+(8, 2, 'Editor', 'Negoteck', 'editor@negoteck.com', '$2y$10$Ldp5MoxAxKLopdQrg1EGWepJkfyVIlob/MLbQeu0.LkOGdIDZQk/a', NULL, NULL, NULL, 1, 1, '2026-08-07 04:34:17', '2026-08-07 04:35:28');
 
 --
+-- --------------------------------------------------------
+-- Tabla adicional: sesiones activas en tiempo real
+-- Integrada desde el tercer esquema proporcionado.
+CREATE TABLE IF NOT EXISTS `sesiones_activas` (
+  `id_sesion` varchar(64) NOT NULL,
+  `id_usuario` int(10) UNSIGNED DEFAULT NULL,
+  `ultima_actividad` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_sesion`),
+  KEY `idx_sesiones_activas_ultima_actividad` (`ultima_actividad`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `usuarios` (`id_usuario`, `id_rol`, `nombre`, `apellidos`, `correo`, `contrasena_hash`, `foto_perfil`, `institucion`, `biografia`, `correo_verificado`, `activo`, `fecha_registro`, `fecha_actualizacion`) VALUES
+(9, 2, 'samuel', 'quezada', 'qs5805165@gmail.com', '$2y$10$zhMIqOIZsHPtg5w/LPSxcOJRzfxPqlpjbjso/Hj01CXv2HbOIQmf2', NULL, NULL, NULL, 1, 1, '2026-08-06 19:48:27', '2026-08-06 19:51:22'),
+(10, 2, 'Adriana', 'Trejo', 'adrianatrejopalma94@gmail.com', '$2y$10$Kt.sQuUB7Y3U2YYJKg/h3OEenxmkxPCf2HU0CSawK1y3ZUkjXCPHu', NULL, NULL, NULL, 1, 1, '2026-08-07 07:06:31', '2026-08-07 07:07:19');
+INSERT INTO `publicaciones` (`id_publicacion`, `id_area`, `id_usuario`, `titulo`, `resumen`, `archivo_pdf`, `imagen_portada`, `estado`, `destacado`, `visitas`, `observaciones_editor`, `fecha_registro`, `fecha_envio`, `fecha_publicacion`, `fecha_actualizacion`, `tipo_contenido`, `url_video`) VALUES
+(27, 8, 9, 'Aprendiendo Phayton', 'Aprendisague sobre los primeros pasos para aprender phyton con un metodo dibertido y agradable para alumnos', '0209e07524.pdf', '3ccc9628e7.png', 'APROBADO', 0, 4, NULL, '2026-08-06 19:58:27', NULL, NULL, '2026-08-06 20:11:25', 'archivo', NULL),
+(28, 1, 10, 'Como publicar cosas en insta correctamente', 'no puede ser ahora no funciona y no se como corregirlo ayudada jajaj y luego ahorita me van a cagar en la uni todo porque el director de carrera me odia', '72b9f7bb1f.pdf', 'ea170a9378.png', 'PENDIENTE', 0, 0, NULL, '2026-08-07 07:09:25', NULL, NULL, '2026-08-07 07:09:45', 'archivo', NULL),
+(29, 1, 10, 'Importancia de la Gestión de Conocimiento en las Empresas Contemporáneas', 'Importancia de la Gestión de Conocimiento en las Empresas ContemporáneasImportancia de la Gestión de Conocimiento en las Empresas ContemporáneasImportancia de la Gestión de Conocimiento en las Empresas ContemporáneasImportancia de la Gestión de Conocimiento en las Empresas ContemporáneasImportancia ', 'fb167438b0.pdf', '05efe17f45.png', 'PENDIENTE', 0, 0, NULL, '2026-08-07 14:18:37', NULL, NULL, '2026-08-07 14:18:37', 'archivo', NULL);
+INSERT INTO `comentarios` (`id_comentario`, `id_publicacion`, `id_usuario`, `contenido`, `activo`, `fecha_registro`, `fecha_actualizacion`) VALUES
+(1, 27, 9, 'putos', 1, '2026-08-06 20:01:26', NULL),
+(2, 27, 9, 'putos', 1, '2026-08-06 20:02:08', NULL);
+
 -- Índices para tablas volcadas
 --
 
@@ -447,7 +473,7 @@ ALTER TABLE `areas`
 -- AUTO_INCREMENT de la tabla `comentarios`
 --
 ALTER TABLE `comentarios`
-  MODIFY `id_comentario` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_comentario` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `historial_publicaciones`
@@ -477,7 +503,7 @@ ALTER TABLE `palabras_clave`
 -- AUTO_INCREMENT de la tabla `publicaciones`
 --
 ALTER TABLE `publicaciones`
-  MODIFY `id_publicacion` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_publicacion` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT de la tabla `publicaciones_autores`
@@ -489,31 +515,31 @@ ALTER TABLE `publicaciones_autores`
 -- AUTO_INCREMENT de la tabla `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id_rol` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_rol` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tokens_login`
 --
 ALTER TABLE `tokens_login`
-  MODIFY `id_token_login` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id_token_login` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT de la tabla `tokens_recuperacion`
 --
 ALTER TABLE `tokens_recuperacion`
-  MODIFY `id_token_recuperacion` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_token_recuperacion` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT de la tabla `tokens_registro`
 --
 ALTER TABLE `tokens_registro`
-  MODIFY `id_token_registro` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_token_registro` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Restricciones para tablas volcadas

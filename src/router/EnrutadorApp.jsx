@@ -5,7 +5,11 @@ import DisenoPanel from "../layouts/DisenoPanel";
 import RutaProtegida from "./RutaProtegida";
 
 import PaginaInicio from "../pages/PaginaInicio";
+import PaginaQuienesSomos from "../pages/PaginaQuienesSomos";
+import PaginaAreasConocimiento from "../pages/PaginaAreasConocimiento";
 import PaginaArea from "../pages/PaginaArea";
+import PaginaComoPublicar from "../pages/PaginaComoPublicar";
+import PaginaContacto from "../pages/PaginaContacto";
 import PaginaDetallePublicacion from "../pages/PaginaDetallePublicacion";
 import PaginaIniciarSesion from "../pages/PaginaIniciarSesion";
 import PaginaRegistro from "../pages/PaginaRegistro";
@@ -29,7 +33,11 @@ export default function EnrutadorApp() {
     <Routes>
       <Route element={<DisenoPrincipal />}>
         <Route path="/" element={<PaginaInicio />} />
+        <Route path="/quienes-somos" element={<PaginaQuienesSomos />} />
+        <Route path="/areas" element={<PaginaAreasConocimiento />} />
         <Route path="/areas/:idArea" element={<PaginaArea />} />
+        <Route path="/como-publicar" element={<PaginaComoPublicar />} />
+        <Route path="/contacto" element={<PaginaContacto />} />
         <Route path="/publicacion/:id" element={<PaginaDetallePublicacion />} />
       </Route>
 

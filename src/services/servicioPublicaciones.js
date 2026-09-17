@@ -8,9 +8,9 @@ export async function obtenerPublicacionesRecientes(limite = 5) {
   return datos;
 }
 
-export async function obtenerPublicacionesDestacadas(limite = 6) {
+export async function obtenerPublicacionesMasVistas(limite = 6) {
   const { datos } = await solicitarApi(
-    `/publicaciones-destacadas.php?limite=${limite}`,
+    `/publicaciones-mas-vistas.php?limite=${limite}`,
   );
   return datos;
 }
