@@ -155,7 +155,7 @@ export default function BarraLateral() {
 
   return (
     <>
-      <div className="sticky top-0 z-30 flex w-full items-center justify-between border-b border-tinta/10 bg-papel-suave px-4 py-3 lg:hidden">
+      <div className="flex items-center justify-between border-b border-tinta/10 bg-papel-suave px-4 py-3 lg:hidden">
         <Link
           to="/"
           className="font-display text-lg font-semibold text-tinta"

@@ -1,8 +1,14 @@
+// Valores de respaldo mientras carga la petición real a /estadisticas.php
+// (o si esta falla). Los ids deben coincidir con los que devuelve
+// backend-php/models/Estadistica.php y con el mapeo de
+// src/components/home/BandaEstadisticas.jsx (s1-s3) y
+// src/hooks/useContadoresNavbar.js (s4-s5).
 export const estadisticasRevista = [
-  { id: 's1', etiqueta: 'Publicaciones activas', valor: '312' },
-  { id: 's2', etiqueta: 'Autores registrados', valor: '148' },
-  { id: 's3', etiqueta: 'Áreas de investigación', valor: '8' },
-  { id: 's4', etiqueta: 'Lectores mensuales', valor: '46K' },
+  { id: 's1', etiqueta: 'Publicaciones publicadas', valor: '—' },
+  { id: 's2', etiqueta: 'Autores registrados', valor: '—' },
+  { id: 's3', etiqueta: 'Áreas de conocimiento', valor: '—' },
+  { id: 's4', etiqueta: 'Vistas totales', valor: '—' },
+  { id: 's5', etiqueta: 'Usuarios activos ahora', valor: '—' },
 ]
 
 export const preguntasFrecuentes = [
