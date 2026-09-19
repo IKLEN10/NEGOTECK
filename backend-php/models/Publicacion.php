@@ -42,6 +42,26 @@ class Publicacion
     }
 
     /**
+     * Publicaciones aprobadas ordenadas por número de vistas (p.visitas),
+     * de mayor a menor. Empate por fecha de publicación más reciente.
+     */
+    public function obtenerMasVistas(int $limite = 6): array
+    {
+        $limite = $this->normalizarLimite($limite, 6, 20);
+
+        $sql = $this->consultaBase() . '
+            ORDER BY p.visitas DESC, COALESCE(p.fecha_publicacion, p.fecha_registro) DESC
+            LIMIT :limite
+        ';
+
+        $consulta = $this->conexion->prepare($sql);
+        $consulta->bindValue(':limite', $limite, PDO::PARAM_INT);
+        $consulta->execute();
+
+        return array_map([$this, 'mapearFila'], $consulta->fetchAll());
+    }
+
+    /**
      * Trae una publicación aprobada por su id.
      * Usada por la página de detalle ("Ver más") del frontend.
      */

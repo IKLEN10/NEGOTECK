@@ -152,6 +152,12 @@ class Correo
             $mail->SMTPSecure = MAIL_CIFRADO;
             $mail->Port = MAIL_PUERTO;
             $mail->CharSet = 'UTF-8';
+            // Si el servidor SMTP está lento o inalcanzable, sin este límite
+            // PHPMailer puede dejar la petición colgada varios minutos (su
+            // valor por defecto) antes de fallar, aunque la cuenta o el
+            // token ya se hayan guardado correctamente en la base de datos.
+            $mail->Timeout = 10;
+            $mail->SMTPKeepAlive = false;
 
             $mail->setFrom(MAIL_REMITENTE, MAIL_REMITENTE_NOMBRE);
             $mail->addAddress($destino);

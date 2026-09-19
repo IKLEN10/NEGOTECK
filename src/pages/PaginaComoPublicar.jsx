@@ -11,12 +11,12 @@ import SeccionPreguntasFrecuentes from '../components/home/SeccionPreguntasFrecu
 export default function PaginaComoPublicar() {
   return (
     <>
-      <BarraNavegacion />
       <EncabezadoPagina
         etiqueta="Para autores"
         titulo="¿Cómo publicar?"
         descripcion="El proceso, los requisitos y el formato para compartir tu artículo en NEGOTECK."
       />
+      <BarraNavegacion />
       <ComoPublicar />
       <GuiaElaboracionArticulos />
       <SeccionPreguntasFrecuentes />
