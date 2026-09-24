@@ -1,11 +1,31 @@
 import { Mail, Search } from 'lucide-react'
-import { useMemo, useState } from 'react'
-import { calcularPublicacionesPorAutor } from '../../data/estadisticasAdmin'
+import { useEffect, useState } from 'react'
+import { obtenerAutoresAdmin } from '../../services/servicioAutenticacion'
 import Insignia from '../../components/common/Insignia'
 
 export default function PaginaAdminAutores() {
   const [busqueda, setBusqueda] = useState('')
-  const autores = useMemo(() => calcularPublicacionesPorAutor(), [])
+  const [autores, setAutores] = useState([])
+  const [cargando, setCargando] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    let activo = true
+    setCargando(true)
+    obtenerAutoresAdmin()
+      .then((datos) => {
+        if (activo) setAutores(datos || [])
+      })
+      .catch((err) => {
+        if (activo) setError(err.message || 'No se pudieron cargar los autores.')
+      })
+      .finally(() => {
+        if (activo) setCargando(false)
+      })
+    return () => {
+      activo = false
+    }
+  }, [])
 
   const filtrados = autores.filter((a) => a.nombre.toLowerCase().includes(busqueda.toLowerCase()))
 
@@ -27,31 +47,51 @@ export default function PaginaAdminAutores() {
         />
       </div>
 
-      <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {filtrados.map((autor) => (
-          <div key={autor.id} className="rounded-card border border-tinta/10 bg-papel-suave p-5 shadow-soft">
-            <div className="flex items-center gap-3">
-              <img src={autor.avatar} alt="" className="h-11 w-11 rounded-full object-cover" />
-              <div className="min-w-0">
-                <p className="truncate font-display text-sm font-medium text-tinta">{autor.nombre}</p>
-                <p className="truncate text-xs text-tinta/50">{autor.rol}</p>
+      {error && <p className="mt-6 text-sm text-tinta/60">No se pudieron cargar los autores: {error}</p>}
+
+      {cargando && (
+        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="esqueleto h-32 rounded-card" />
+          ))}
+        </div>
+      )}
+
+      {!cargando && (
+        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {filtrados.map((autor) => (
+            <div key={autor.id} className="rounded-card border border-tinta/10 bg-papel-suave p-5 shadow-soft">
+              <div className="flex items-center gap-3">
+                <img
+                  src={autor.avatar || '/logo-negoteck.jpg'}
+                  alt=""
+                  onError={(evento) => {
+                    evento.currentTarget.onerror = null
+                    evento.currentTarget.src = '/logo-negoteck.jpg'
+                  }}
+                  className="h-11 w-11 rounded-full object-cover"
+                />
+                <div className="min-w-0">
+                  <p className="truncate font-display text-sm font-medium text-tinta">{autor.nombre}</p>
+                  <p className="truncate text-xs text-tinta/50">{autor.rol}</p>
+                </div>
+              </div>
+
+              <a href={`mailto:${autor.correo}`} className="mt-3 flex items-center gap-2 text-xs text-tinta/50 hover:text-azulRey-600">
+                <Mail size={12} /> {autor.correo}
+              </a>
+
+              <div className="mt-4 flex items-center justify-between border-t border-tinta/10 pt-4">
+                <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-tinta/45">
+                  {autor.total} publicación{autor.total === 1 ? '' : 'es'}
+                </span>
+                {autor.pendientes > 0 && <Insignia estado="Pendiente">{autor.pendientes} pendiente{autor.pendientes === 1 ? '' : 's'}</Insignia>}
               </div>
             </div>
-
-            <a href={`mailto:${autor.correo}`} className="mt-3 flex items-center gap-2 text-xs text-tinta/50 hover:text-azulRey-600">
-              <Mail size={12} /> {autor.correo}
-            </a>
-
-            <div className="mt-4 flex items-center justify-between border-t border-tinta/10 pt-4">
-              <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-tinta/45">
-                {autor.total} publicación{autor.total === 1 ? '' : 'es'}
-              </span>
-              {autor.pendientes > 0 && <Insignia estado="Pendiente">{autor.pendientes} pendiente{autor.pendientes === 1 ? '' : 's'}</Insignia>}
-            </div>
-          </div>
-        ))}
-        {filtrados.length === 0 && <p className="col-span-full py-10 text-center text-sm text-tinta/50">Sin resultados.</p>}
-      </div>
+          ))}
+          {filtrados.length === 0 && <p className="col-span-full py-10 text-center text-sm text-tinta/50">Sin resultados.</p>}
+        </div>
+      )}
     </div>
   )
 }

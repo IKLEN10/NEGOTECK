@@ -118,3 +118,14 @@ export async function cambiarContrasena(formData) {
     },
   });
 }
+
+// Panel del Administrador General: lista de autores registrados con sus
+// estadísticas reales de publicaciones (ver PaginaAdminAutores.jsx).
+export async function obtenerAutoresAdmin() {
+  const { datos } = await solicitarApi("/admin/autores.php", {
+    headers: {
+      Authorization: `Bearer ${obtenerToken()}`,
+    },
+  });
+  return datos;
+}
