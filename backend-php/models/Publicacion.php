@@ -537,4 +537,129 @@ class Publicacion
 
         return $publicacion;
     }
+
+    // PAGINADO Y FILTRO DE PUBLICACIONES POR CUATRIMESTRES
+
+    /**
+     * Obtiene publicaciones aprobadas paginadas, opcionalmente filtradas por cuatrimestre y año.
+     */
+    public function obtenerPaginadas(int $limite = 9, int $offset = 0, ?string $cuatrimestre = null, ?int $anio = null): array
+    {
+        $condiciones = ["p.estado = 'APROBADO'"];
+        $parametros  = [];
+
+        if ($cuatrimestre && $anio) {
+            $meses = match (strtolower(trim($cuatrimestre))) {
+                'enero - abril'          => [1, 4],
+                'mayo - agosto'          => [5, 8],
+                'septiembre - diciembre' => [9, 12],
+                default                  => null,
+            };
+
+            if ($meses) {
+                $condiciones[] = "(MONTH(COALESCE(p.fecha_publicacion, p.fecha_registro)) BETWEEN :mesInicio AND :mesFin AND YEAR(COALESCE(p.fecha_publicacion, p.fecha_registro)) = :anioFiltro)";
+
+                $parametros[':mesInicio']  = $meses[0];
+                $parametros[':mesFin']     = $meses[1];
+                $parametros[':anioFiltro'] = $anio;
+            }
+        }
+
+        $whereSql = implode(' AND ', $condiciones);
+
+        $sql = $this->consultaBaseSinWhere() . "
+            WHERE {$whereSql}
+            ORDER BY COALESCE(p.fecha_publicacion, p.fecha_registro) DESC
+            LIMIT :limite OFFSET :offset
+        ";
+
+        $consulta = $this->conexion->prepare($sql);
+
+        foreach ($parametros as $clave => $valor) {
+            $consulta->bindValue($clave, $valor, PDO::PARAM_INT);
+        }
+
+        $consulta->bindValue(':limite', $limite, PDO::PARAM_INT);
+        $consulta->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+        $consulta->execute();
+
+        return array_map([$this, 'mapearFila'], $consulta->fetchAll());
+    }
+    /**
+     * Obtiene la lista de cuatrimestres y años disponibles que tienen publicaciones aprobadas.
+     */
+    public function obtenerCuatrimestresDisponibles(): array
+    {
+        $sql = "
+            SELECT DISTINCT
+                YEAR(COALESCE(fecha_publicacion, fecha_registro)) as anio,
+                MONTH(COALESCE(fecha_publicacion, fecha_registro)) as mes
+            FROM publicaciones
+            WHERE estado = 'APROBADO'
+            ORDER BY anio DESC, mes DESC
+        ";
+
+        $consulta = $this->conexion->query($sql);
+        $filas    = $consulta->fetchAll();
+
+        $cuatrimestresUnicos = [];
+
+        foreach ($filas as $fila) {
+            $mes  = (int) $fila['mes'];
+            $anio = (int) $fila['anio'];
+
+            if ($mes >= 1 && $mes <= 4) {
+                $nombre = "Enero - Abril";
+            } elseif ($mes >= 5 && $mes <= 8) {
+                $nombre = "Mayo - Agosto";
+            } else {
+                $nombre = "Septiembre - Diciembre";
+            }
+
+            $clave                       = "$nombre $anio";
+            $cuatrimestresUnicos[$clave] = [
+                'cuatrimestre' => $nombre,
+                'anio'         => $anio,
+                'etiqueta'     => "$nombre $anio",
+            ];
+        }
+
+        return array_values($cuatrimestresUnicos);
+    }
+
+    /**
+     * Consulta base con los JOINs necesarios (sin WHERE estático para reutilizar filtros).
+     */
+    private function consultaBaseSinWhere(): string
+    {
+        return "
+            SELECT
+                p.id_publicacion,
+                p.titulo,
+                p.resumen,
+                p.archivo_pdf,
+                p.imagen_portada,
+                p.fecha_registro,
+                p.fecha_publicacion,
+                p.destacado,
+                p.visitas,
+                p.tipo_contenido,
+                p.url_video,
+                a.slug   AS area_slug,
+                a.nombre AS area_nombre,
+                a.color  AS area_color,
+                u.nombre     AS usuario_nombre,
+                u.apellidos  AS usuario_apellidos,
+                pa.nombre_autor AS autor_principal_nombre
+            FROM publicaciones p
+            INNER JOIN areas a
+                ON a.id_area = p.id_area
+            INNER JOIN usuarios u
+                ON u.id_usuario = p.id_usuario
+            LEFT JOIN publicaciones_autores pa
+                ON pa.id_publicacion = p.id_publicacion
+                AND pa.es_principal = 1
+        ";
+    }
 }

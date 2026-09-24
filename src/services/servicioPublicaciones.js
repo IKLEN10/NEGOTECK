@@ -14,6 +14,26 @@ export async function obtenerPublicacionesMasVistas(limite = 6) {
   );
   return datos;
 }
+export async function obtenerPublicacionesCuatrimestres({
+  pagina = 1,
+  cuatrimestre = "",
+  anio = "",
+} = {}) {
+  const params = new URLSearchParams();
+  params.append("page", pagina);
+
+  if (cuatrimestre) params.append("cuatrimestre", cuatrimestre);
+  if (anio) params.append("anio", anio);
+
+  const respuesta = await solicitarApi(
+    `/publicaciones-por-cuatrimestres.php?${params.toString()}`,
+  );
+
+  return {
+    data: respuesta.data || respuesta || [],
+    filtros_disponibles: respuesta.filtros_disponibles || [],
+  };
+}
 
 // `registrarVista` en false evita que el backend incremente el contador de
 // vistas (se usa cuando esta publicación ya fue contabilizada antes en la
