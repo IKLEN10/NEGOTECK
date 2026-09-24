@@ -638,6 +638,9 @@ class Publicacion
     /**
      * Consulta base con los JOINs necesarios (sin WHERE estático para reutilizar filtros).
      */
+    /**
+     * Consulta base con los JOINs necesarios (sin WHERE estático para reutilizar filtros).
+     */
     private function consultaBaseSinWhere(): string
     {
         return "
@@ -656,8 +659,11 @@ class Publicacion
                 a.slug   AS area_slug,
                 a.nombre AS area_nombre,
                 a.color  AS area_color,
+                u.id_usuario,
                 u.nombre     AS usuario_nombre,
                 u.apellidos  AS usuario_apellidos,
+                u.biografia  AS usuario_biografia,
+                u.foto_perfil AS avatar,
                 pa.nombre_autor AS autor_principal_nombre
             FROM publicaciones p
             INNER JOIN areas a
