@@ -1,28 +1,8 @@
 import { useEffect } from "react";
 import { registrarPresencia } from "../services/servicioPresencia";
+import { obtenerIdSesion } from "../utils/sesionNavegador";
 
-const CLAVE_ID_SESION = "negoteck_id_sesion";
 const INTERVALO_MS = 25000;
-
-function generarId() {
-  if (window.crypto?.randomUUID) return window.crypto.randomUUID();
-  return `s-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-}
-
-function obtenerIdSesion() {
-  try {
-    let id = window.sessionStorage.getItem(CLAVE_ID_SESION);
-    if (!id) {
-      id = generarId();
-      window.sessionStorage.setItem(CLAVE_ID_SESION, id);
-    }
-    return id;
-  } catch {
-    // sessionStorage puede no estar disponible (modo privado, etc.); se
-    // usa un id solo en memoria para esta carga de página.
-    return generarId();
-  }
-}
 
 /**
  * Mantiene viva la cifra de "usuarios activos ahora" que se muestra en el
