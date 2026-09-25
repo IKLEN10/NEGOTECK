@@ -86,8 +86,7 @@ export default function PaginaArea() {
 
   return (
     <div>
-      <BarraNavegacion />
-      <header className="relative overflow-hidden bg-azulRey-700">
+      <header className="banner-interno relative overflow-hidden bg-azulRey-700">
         <img
           src={area.imagen || '/logo-negoteck.jpg'}
           alt={`Imagen del área ${area.nombre}`}
@@ -98,12 +97,13 @@ export default function PaginaArea() {
           className="absolute inset-0 h-full w-full object-cover opacity-25"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-azulRey-900/90 via-azulRey-800/60 to-transparent" />
-        <div className="contenedor-pagina relative py-16 sm:py-20">
+        <div className="contenedor-pagina relative py-6">
           <p className="antetitulo text-papel-suave/70 before:bg-papel-suave/60">Área de investigación</p>
           <h1 className="mt-3 max-w-lg font-display text-3xl font-medium text-papel-suave sm:text-4xl">{area.nombre}</h1>
           <p className="mt-4 max-w-xl text-[15px] text-papel-suave/75">{area.descripcion}</p>
         </div>
       </header>
+      <BarraNavegacion />
 
       <div className="contenedor-pagina py-10 sm:py-14">
         {/* Barra de filtros */}

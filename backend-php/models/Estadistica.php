@@ -27,7 +27,10 @@ require_once __DIR__ . '/Presencia.php';
  * nunca recibía datos para esos ids y la sección terminaba sin
  * renderizarse una vez que la petición real reemplazaba los valores de
  * respaldo.
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/style/orden-banner-encabezado
  */
 class Estadistica
 {
@@ -40,7 +43,6 @@ class Estadistica
 
     public function obtenerResumen(): array
     {
-
         $publicacionesAprobadas = (int) $this->conexion
             ->query("SELECT COUNT(*) FROM publicaciones WHERE estado = 'APROBADO'")
             ->fetchColumn();
@@ -60,7 +62,6 @@ class Estadistica
         $usuariosActivos = (new Presencia())->contarActivas();
 
         return [
-
             ['id' => 's1', 'etiqueta' => 'Publicaciones publicadas', 'valor' => $this->formatearNumero($publicacionesAprobadas)],
             ['id' => 's2', 'etiqueta' => 'Autores registrados', 'valor' => $this->formatearNumero($autoresRegistrados)],
             ['id' => 's3', 'etiqueta' => 'Áreas de conocimiento', 'valor' => $this->formatearNumero($areasActivas)],

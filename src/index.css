@@ -41,6 +41,48 @@
   .contenedor-pagina {
     @apply mx-auto w-full max-w-content px-5 sm:px-8;
   }
+  /* Altura de los banners azules de las páginas internas (EncabezadoPagina
+     y el encabezado de PaginaArea): igual a la del banner de Inicio
+     (BannerSuperior), que no tiene altura fija sino que sale de su padding
+     + el alto del logo o del párrafo. Valores medidos con Poppins:
+       ≥ 1024px  → py-20 (160) + logo w-72 (79.12)          = 239.12
+       640–1023  → py-16 (128) + logo w-64 (70.33) + gap 32
+                   + párrafo (3 líneas de 24)                = 302.33
+       < 640px   → py-14 (112) + logo w-56 (61.53) + gap 32
+                   + párrafo de 14px (2 a 5 líneas de 22.75), por lo que
+                   baja de 319.28 a 251.03 conforme el ancho crece.
+     Si cambia el texto o el logo de BannerSuperior hay que reajustar estos
+     valores. El contenido se centra en vertical y, si algún texto es más
+     alto que el banner, éste crece lo justo (min-height, no height). */
+  .banner-interno {
+    @apply flex items-center;
+    min-height: 319.28px;
+  }
+  @media (min-width: 321px) {
+    .banner-interno {
+      min-height: 296.53px;
+    }
+  }
+  @media (min-width: 402px) {
+    .banner-interno {
+      min-height: 273.78px;
+    }
+  }
+  @media (min-width: 566px) {
+    .banner-interno {
+      min-height: 251.03px;
+    }
+  }
+  @media (min-width: 640px) {
+    .banner-interno {
+      min-height: 302.33px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .banner-interno {
+      min-height: 239.12px;
+    }
+  }
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-[3px] px-5 py-3 text-sm font-semibold tracking-wide transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none;
   }
