@@ -1,5 +1,6 @@
 import { solicitarApi } from "./config";
 import { obtenerToken } from "./servicioAutenticacion";
+import { obtenerIdVisitante } from "../utils/sesionNavegador";
 
 export async function obtenerPublicacionesRecientes(limite = 5) {
   const { datos } = await solicitarApi(
@@ -36,16 +37,21 @@ export async function obtenerPublicacionesCuatrimestres({
   };
 }
 
-// `registrarVista` en false evita que el backend incremente el contador de
-// vistas (se usa cuando esta publicación ya fue contabilizada antes en la
-// misma sesión del navegador, por ejemplo tras recargar la página).
+// El backend cuenta la vista como máximo una vez cada 2 horas por
+// persona (`id_visitante`, compartido por todas las pestañas del
+// navegador): recargar, abrir otra pestaña o volver a entrar dentro de
+// ese tiempo no suma. `registrarVista` en false
+// consulta la publicación sin intentar registrar la vista.
 export async function obtenerPublicacionPorId(
   id,
   { registrarVista = true } = {},
 ) {
-  const { datos } = await solicitarApi(
-    `/publicacion-detalle.php?id=${encodeURIComponent(id)}&registrar_vista=${registrarVista ? "1" : "0"}`,
-  );
+  const params = new URLSearchParams({
+    id: String(id),
+    registrar_vista: registrarVista ? "1" : "0",
+    id_visitante: obtenerIdVisitante(),
+  });
+  const { datos } = await solicitarApi(`/publicacion-detalle.php?${params.toString()}`);
   return datos;
 }
 

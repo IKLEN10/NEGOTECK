@@ -90,6 +90,18 @@ class Publicacion
     }
 
     /**
+     * Valor actual del contador acumulado de vistas de una publicación.
+     */
+    public function obtenerVisitas(int $idPublicacion): int
+    {
+        $consulta = $this->conexion->prepare(
+            'SELECT visitas FROM publicaciones WHERE id_publicacion = :id'
+        );
+        $consulta->execute([':id' => $idPublicacion]);
+        return (int) $consulta->fetchColumn();
+    }
+
+    /**
      * Consulta base compartida: trae la publicación con su área y autor
      * mediante los JOIN que ya permite el esquema.
      */

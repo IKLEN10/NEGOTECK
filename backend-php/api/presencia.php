@@ -24,6 +24,13 @@ try {
     $idUsuario = $usuario['id_usuario'] ?? null;
 
     $presencia = new Presencia();
+
+    // Señal de salida: se manda al cerrar la última pestaña del sitio.
+    if (($cuerpo['accion'] ?? '') === 'salir') {
+        $presencia->salir($idSesion);
+        Respuesta::json(['exito' => true]);
+    }
+
     $presencia->registrar($idSesion, $idUsuario);
 
     Respuesta::json(['exito' => true]);

@@ -1,20 +1,18 @@
 <?php
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/Presencia.php';
+require_once __DIR__ . '/ContadorSitio.php';
 
 /**
  * Cifras que alimentan dos lugares del frontend:
  *  - BandaEstadisticas (sección "NEGOTECK en números" de la home): s1, s2, s3.
  *  - ContadoresEnVivo, junto al buscador del menú (useContadoresNavbar): s4, s5.
  *
- * IMPORTANTE (inconsistencia frontend vs. SQL):
- * El diseño original mostraba "Lectores mensuales" en s4, pero el esquema
- * no contiene ninguna tabla de tráfico/analítica por periodo (solo existe
- * `publicaciones.visitas`, un contador acumulado por publicación).
- * Mientras no exista una tabla de analítica real, se expone en su lugar
- * "Vistas totales" (suma de `visitas`), que sí es un dato genuino de la
- * base de datos: no se crea ningún contador nuevo ni duplicado, solo se
- * reutiliza la columna existente. Ver README del backend para más detalle.
+ * "Vistas totales" (s4) es el contador de visitas al sitio
+ * (tabla `contador_sitio`): una persona suma como máximo una vez cada
+ * 2 horas. Ver models/ContadorSitio.php, models/Vista.php y
+ * bd/migracion_vistas.sql.
+ * Las vistas de cada publicación siguen en `publicaciones.visitas`.
  *
  * "Usuarios activos ahora" (s5) sí es una cifra nueva: se apoya en la
  * tabla `sesiones_activas` (ver models/Presencia.php y la migración
@@ -55,9 +53,10 @@ class Estadistica
             ->query('SELECT COUNT(*) FROM areas WHERE activo = 1')
             ->fetchColumn();
 
-        $visitasAcumuladas = (int) $this->conexion
-            ->query('SELECT COALESCE(SUM(visitas), 0) FROM publicaciones')
-            ->fetchColumn();
+        // "Vistas totales" = visitas al sitio (una por persona cada 2 h,
+        // ver models/ContadorSitio.php y models/Vista.php). Las vistas de
+        // cada publicación se siguen mostrando en su tarjeta.
+        $visitasAcumuladas = (new ContadorSitio())->obtener();
 
         $usuariosActivos = (new Presencia())->contarActivas();
 

@@ -29,7 +29,6 @@ import { TarjetaEsqueleto } from "../components/common/Esqueleto";
 import BarraNavegacion from "../components/layout/BarraNavegacion";
 import { useNotificacion } from "../hooks/useNotificacion";
 import { obtenerUrlEmbedYoutube } from "../utils/video";
-import { yaSeRegistroVista, marcarVistaRegistrada } from "../utils/vistas";
 
 const formateadorFecha = new Intl.DateTimeFormat("es-MX", {
   day: "2-digit",
@@ -103,16 +102,14 @@ export default function PaginaDetallePublicacion() {
     setCargando(true);
     setNoEncontrada(false);
 
-    // Si esta publicación ya sumó una vista en la sesión actual del
-    // navegador (por ejemplo, el usuario recargó la página), se le pide
-    // al backend que no vuelva a incrementar el contador.
-    const contarComoVisitaNueva = !yaSeRegistroVista(id);
-
-    obtenerPublicacionPorId(id, { registrarVista: contarComoVisitaNueva })
+    // La vista la decide el backend: la misma persona suma como máximo
+    // una vez cada 2 horas (recargar, abrir otra pestaña o volver a
+    // entrar no suma) y devuelve el número ya actualizado, el mismo que
+    // mostrará la tarjeta al regresar al listado.
+    obtenerPublicacionPorId(id)
       .then((datos) => {
         if (!activo) return;
         setPublicacion(normalizarPublicacionBackend(datos));
-        marcarVistaRegistrada(id);
       })
       .catch(() => {
         if (activo) setNoEncontrada(true);
