@@ -1,16 +1,23 @@
 import { URL_BASE_API } from "./config";
+import { notificarCambioContadores } from "../utils/eventosContadores";
 
-// Registra la visita al sitio de esta sesión de pestaña. El backend
-// ignora las repetidas (misma sesión), así que llamarlo de más no
-// infla el contador. Igual que la presencia, es una señal secundaria:
-// si falla, no debe afectar la navegación ni mostrar errores.
-export function registrarVisitaSitio(idSesion) {
+// Avisa al backend que esta persona está en el sitio. El backend decide
+// si cuenta como visita nueva (una por persona cada 2 horas), así que
+// llamarlo de más no infla el contador. Si la visita sí contó, se le
+// pide al menú que recargue "Vistas totales" en ese momento. Es una
+// señal secundaria: si falla, no debe afectar la navegación.
+export function registrarVisitaSitio(idVisitante) {
   fetch(`${URL_BASE_API}/registrar-visita.php`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id_sesion: idSesion }),
+    body: JSON.stringify({ id_visitante: idVisitante }),
     keepalive: true,
-  }).catch(() => {
-    // Silencioso a propósito.
-  });
+  })
+    .then((respuesta) => (respuesta.ok ? respuesta.json() : null))
+    .then((datos) => {
+      if (datos?.nueva) notificarCambioContadores();
+    })
+    .catch(() => {
+      // Silencioso a propósito.
+    });
 }

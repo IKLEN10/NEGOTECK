@@ -1,16 +1,17 @@
 <?php
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/Presencia.php';
-require_once __DIR__ . '/Vista.php';
+require_once __DIR__ . '/ContadorSitio.php';
 
 /**
  * Cifras que alimentan dos lugares del frontend:
  *  - BandaEstadisticas (sección "NEGOTECK en números" de la home): s1, s2, s3.
  *  - ContadoresEnVivo, junto al buscador del menú (useContadoresNavbar): s4, s5.
  *
- * "Vistas totales" (s4) cuenta las visitas al sitio registradas en la
- * tabla `vistas` (tipo 'sitio'): una por sesión de pestaña del
- * navegador. Ver models/Vista.php y bd/migracion_vistas.sql.
+ * "Vistas totales" (s4) es el contador de visitas al sitio
+ * (tabla `contador_sitio`): una persona suma como máximo una vez cada
+ * 2 horas. Ver models/ContadorSitio.php, models/Vista.php y
+ * bd/migracion_vistas.sql.
  * Las vistas de cada publicación siguen en `publicaciones.visitas`.
  *
  * "Usuarios activos ahora" (s5) sí es una cifra nueva: se apoya en la
@@ -50,10 +51,10 @@ class Estadistica
             ->query('SELECT COUNT(*) FROM areas WHERE activo = 1')
             ->fetchColumn();
 
-        // "Vistas totales" = visitas al sitio (una por sesión de pestaña,
-        // ver models/Vista.php). Ya no es la suma de las vistas de las
-        // publicaciones: esas se siguen mostrando en cada tarjeta.
-        $visitasAcumuladas = (new Vista())->contar(Vista::TIPO_SITIO);
+        // "Vistas totales" = visitas al sitio (una por persona cada 2 h,
+        // ver models/ContadorSitio.php y models/Vista.php). Las vistas de
+        // cada publicación se siguen mostrando en su tarjeta.
+        $visitasAcumuladas = (new ContadorSitio())->obtener();
 
         $usuariosActivos = (new Presencia())->contarActivas();
 

@@ -102,10 +102,10 @@ export default function PaginaDetallePublicacion() {
     setCargando(true);
     setNoEncontrada(false);
 
-    // La vista la decide el backend con el id de sesión de la pestaña:
-    // cuenta una sola vez por sesión (recargar o volver a entrar no
-    // suma) y devuelve el número ya actualizado, el mismo que mostrará
-    // la tarjeta al regresar al listado.
+    // La vista la decide el backend: la misma persona suma como máximo
+    // una vez cada 2 horas (recargar, abrir otra pestaña o volver a
+    // entrar no suma) y devuelve el número ya actualizado, el mismo que
+    // mostrará la tarjeta al regresar al listado.
     obtenerPublicacionPorId(id)
       .then((datos) => {
         if (!activo) return;

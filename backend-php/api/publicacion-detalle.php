@@ -17,34 +17,23 @@ try {
         Respuesta::error('No se encontró esta publicación.', 404);
     }
 
-    // La vista la decide el servidor, no el navegador: se cuenta como
-    // máximo una vez por sesión de pestaña (id_sesion). Recargar o
-    // salir y volver a entrar en la misma pestaña no suma; cerrar la
-    // pestaña y volver a entrar sí. Sin id_sesion válido (peticiones
-    // directas, bots) no se cuenta nada.
+    // La vista la decide el servidor (models/Vista.php): la misma
+    // persona suma como máximo una vez cada 2 horas, aunque abra otra
+    // pestaña, recargue o salga y vuelva a entrar.
     // `registrar_vista=0` se sigue respetando por compatibilidad.
-    $idSesion       = trim((string) ($_GET['id_sesion'] ?? ''));
     $registrarVista = ($_GET['registrar_vista'] ?? '1') !== '0';
+    $idVisitante    = trim((string) ($_GET['id_visitante'] ?? ''));
 
-    if ($registrarVista && Vista::idSesionValido($idSesion)) {
-        $conexion = Database::obtenerConexion();
-        $conexion->beginTransaction();
-        try {
-            // Solo si la fila en `vistas` es nueva se incrementa el
-            // contador acumulado `publicaciones.visitas`, que es el que
-            // leen las tarjetas; así ambos nunca se desincronizan.
-            if ((new Vista())->registrar(Vista::TIPO_PUBLICACION, $id, $idSesion)) {
-                $modelo->incrementarVisitas($id);
-            }
-            $conexion->commit();
-        } catch (Throwable $errorVista) {
-            $conexion->rollBack();
-            throw $errorVista;
-        }
+    if ($registrarVista) {
+        (new Vista())->registrar(
+            Vista::TIPO_PUBLICACION,
+            $id,
+            $idVisitante !== '' ? $idVisitante : null,
+            fn () => $modelo->incrementarVisitas($id)
+        );
 
-        // Se relee el valor real de la BD (en vez de sumar +1 en
-        // memoria) para que el detalle muestre exactamente el mismo
-        // número que verá la tarjeta al regresar al listado.
+        // Se relee el valor real de la BD para que el detalle muestre
+        // exactamente el mismo número que verá la tarjeta al regresar.
         $publicacion['visitas'] = $modelo->obtenerVisitas($id);
     }
 

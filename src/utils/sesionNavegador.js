@@ -1,35 +1,45 @@
-// Identificador de la sesión de navegación de ESTA pestaña.
+// Identificadores del navegador que usa el sistema de contadores.
 //
-// Se guarda en `sessionStorage`, así que:
-//  - sobrevive a recargas y a la navegación entre secciones,
-//  - desaparece cuando se cierra la pestaña (la próxima vez que la
-//    persona entre, será una sesión nueva).
+// 1) Id de SESIÓN (sessionStorage, clave `negoteck_id_sesion`):
+//    uno por pestaña; desaparece al cerrarla. Actualmente no lo usa
+//    ningún contador; se conserva por si se necesita contar pestañas.
 //
-// Lo usan "usuarios activos" (usePresencia), la visita al sitio
-// (useVisitaSitio) y las vistas de cada publicación, para que las tres
-// cifras hablen de la misma sesión.
+// 2) Id de VISITANTE (localStorage, clave `negoteck_id_visitante`):
+//    uno por navegador, compartido por todas sus pestañas y conservado
+//    aunque se cierre el navegador. Lo usan "usuarios activos ahora"
+//    (usePresencia) y las vistas (visita al sitio y vistas de cada
+//    publicación) para reconocer a la misma persona.
 const CLAVE_ID_SESION = "negoteck_id_sesion";
+const CLAVE_ID_VISITANTE = "negoteck_id_visitante";
 
-// Respaldo si sessionStorage no está disponible (modo privado estricto,
-// etc.): se conserva en memoria durante esta carga de página para que
-// todas las peticiones usen el mismo id.
-let idEnMemoria = null;
+// Respaldo si el almacenamiento no está disponible (modo privado
+// estricto, etc.): se conserva en memoria durante esta carga de página
+// para que todas las peticiones usen el mismo id.
+const idsEnMemoria = {};
 
-function generarId() {
+function generarId(prefijo) {
   if (window.crypto?.randomUUID) return window.crypto.randomUUID();
-  return `s-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  return `${prefijo}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-export function obtenerIdSesion() {
+function obtenerId(almacenamiento, clave, prefijo) {
   try {
-    let id = window.sessionStorage.getItem(CLAVE_ID_SESION);
+    let id = almacenamiento().getItem(clave);
     if (!id) {
-      id = generarId();
-      window.sessionStorage.setItem(CLAVE_ID_SESION, id);
+      id = generarId(prefijo);
+      almacenamiento().setItem(clave, id);
     }
     return id;
   } catch {
-    if (!idEnMemoria) idEnMemoria = generarId();
-    return idEnMemoria;
+    if (!idsEnMemoria[clave]) idsEnMemoria[clave] = generarId(prefijo);
+    return idsEnMemoria[clave];
   }
+}
+
+export function obtenerIdSesion() {
+  return obtenerId(() => window.sessionStorage, CLAVE_ID_SESION, "s");
+}
+
+export function obtenerIdVisitante() {
+  return obtenerId(() => window.localStorage, CLAVE_ID_VISITANTE, "v");
 }

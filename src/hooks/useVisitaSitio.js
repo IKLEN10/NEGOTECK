@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { registrarVisitaSitio } from "../services/servicioVisitas";
-import { obtenerIdSesion } from "../utils/sesionNavegador";
+import { obtenerIdVisitante } from "../utils/sesionNavegador";
 
 // Rutas que no cuentan como visita a la página pública.
 const RUTAS_EXCLUIDAS = ["/admin", "/panel"];
@@ -11,18 +11,17 @@ function esRutaPublica(ruta) {
 }
 
 /**
- * "Vistas totales" = visitas por sesión: se registra UNA visita cuando la
- * persona llega al sitio público en una pestaña. Recargar o navegar entre
- * secciones no suma (misma sesión); cerrar la pestaña y volver a entrar
- * sí. El backend garantiza que una sesión no cuente dos veces.
+ * "Vistas totales": se avisa al backend en cada página pública que se
+ * visita, y el backend solo suma si esa persona (id de visitante del
+ * navegador, con la IP como respaldo) no sumó en las últimas 2 horas.
+ * Abrir otra pestaña, recargar o navegar entre secciones no suma; si la
+ * persona sigue en el sitio o regresa después de 2 horas, sí.
  */
 export function useVisitaSitio() {
   const { pathname } = useLocation();
-  const yaEnviada = useRef(false);
 
   useEffect(() => {
-    if (yaEnviada.current || !esRutaPublica(pathname)) return;
-    yaEnviada.current = true;
-    registrarVisitaSitio(obtenerIdSesion());
+    if (!esRutaPublica(pathname)) return;
+    registrarVisitaSitio(obtenerIdVisitante());
   }, [pathname]);
 }
