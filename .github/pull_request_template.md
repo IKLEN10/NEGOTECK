@@ -1,24 +1,24 @@
 ## Descripción del Cambio
 
-<!-- Explica brevemente qué características, correcciones o módulos nuevos se están integrando en Negoteck. -->
+<!-- Explica brevemente qué modificaciones se están integrando en NEGOTECK. -->
 
 -
 
-## Tipo de Cambio
+## Tipo de Cambio (Convención de Commits)
 
-- [ ] Corrección de error (_bugfix_)
-- [ ] Nueva característica (_feature_)
-- [ ] Mejora de interfaz o diseño (_UI/UX_)
-- [ ] Refactorización de código
+- [ ] **feat**: Nueva funcionalidad
+- [ ] **fix**: Corrección de errores
+- [ ] **style**: Cambios visuales, CSS o formato sin modificar la lógica
+- [ ] **refactor**: Reestructuración del código sin cambiar su comportamiento
+- [ ] **docs**: Cambios en documentación
 
 ## Pruebas Realizadas
 
 <!-- Describe las pruebas que hiciste para comprobar que funciona -->
 
-- [ ] Pruebas locales en entorno de desarrollo (XAMPP/Servidor local)
-- [ ] Verificación de estilos y responsividad
-- [ ] Validación de conexión con base de datos
+- [ ] Pruebas locales en entorno de desarrollo
+- [ ] Verificación de funcionamiento
 
-## Capturas de Evidencia (Opcional)
+## Capturas de Evidencia
 
 <!-- Adjunta capturas si aplica -->
