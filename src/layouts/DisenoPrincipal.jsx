@@ -3,9 +3,9 @@ import PiePagina from '../components/layout/PiePagina'
 import { useDesplazamientoArriba } from '../hooks/useDesplazamientoArriba'
 
 // El menú de navegación no vive aquí: cada página que usa este layout lo
-// coloca donde corresponda (en Inicio va debajo del banner principal; en
-// el resto va al comienzo), para que Inicio conserve el orden banner →
-// menú y ninguna otra página quede sin el menú visible arriba.
+// coloca justo debajo de su banner (en Inicio, el banner principal; en las
+// páginas internas, el banner azul de la sección), para que todas sigan el
+// mismo orden: banner → menú → contenido.
 export default function DisenoPrincipal() {
   useDesplazamientoArriba()
   return (
